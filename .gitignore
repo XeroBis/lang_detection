@@ -1,4 +1,4 @@
-.extract_venv/
+.*_venv/
 logs/
 
 *.csv
