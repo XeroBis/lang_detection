@@ -1,6 +1,7 @@
 from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, f1_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+from sklearn import preprocessing
 import plotly.express as px
 import pandas as pd
 import re
@@ -75,4 +76,32 @@ def get_train_dev_test(X, y):
     X_dev, X_test, y_dev, y_test = train_test_split(X_mid, y_mid, test_size=0.5, random_state=42)
 
     return X_train, X_dev, X_test, y_train, y_dev, y_test
+
+def train_one_model(vectorizer, model, labels, label_encoder, X_train, y_train, X_dev, y_dev, X_test, y_test, draw=False):
+
+    X_train_vect = vectorizer.fit_transform(X_train)
+    X_dev_vect = vectorizer.transform(X_dev)
+    X_test_vect = vectorizer.transform(X_test)
+
+    y_train_labels = label_encoder.transform(y_train)
+    y_dev_labels = label_encoder.transform(y_dev)
+    y_test_labels = label_encoder.transform(y_test)
+    scaler = preprocessing.StandardScaler(with_mean=False).fit(X_train_vect)
+    X_scaled_train = scaler.transform(X_train_vect)
+
+    model.fit(X_scaled_train, y_train_labels)
+
+    X_dev_scaled = scaler.transform(X_dev_vect)
+    y_pred_dev = model.predict(X_dev_scaled)
+    accuracy_dev = accuracy_score(y_dev_labels, y_pred_dev)
+    print(f"Accuracy DEV {vectorizer} et {model}: {accuracy_dev:.3f}")
+    display_results(y_dev_labels, y_pred_dev, labels, draw)
+    
+    X_test_scaled = scaler.transform(X_test_vect)
+    y_pred_test = model.predict(X_test_scaled)
+
+    # Calcul de l'accuracy sur les données de test
+    accuracy_test = accuracy_score(y_test_labels, y_pred_test)
+    print(f"Accuracy TEST {vectorizer} et {model}: {accuracy_test:.3f}")
+    display_results(y_test_labels, y_pred_test, labels, draw)
 
