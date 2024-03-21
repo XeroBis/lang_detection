@@ -4,6 +4,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn import preprocessing
 import plotly.express as px
 import pandas as pd
+import numpy as np
 import re
 
 
@@ -66,14 +67,14 @@ def get_label_encoder(y):
     label_encoder.fit(y)
     labels = {}
 
-    for a in y.unique():
+    for a in np.unique(y):
         labels[a] = label_encoder.transform([a])[0]
     return label_encoder, labels
 
 def get_train_dev_test(X, y):
-    X_train, X_mid, y_train, y_mid = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_mid, y_train, y_mid = train_test_split(X, y, test_size=0.2)
 
-    X_dev, X_test, y_dev, y_test = train_test_split(X_mid, y_mid, test_size=0.5, random_state=42)
+    X_dev, X_test, y_dev, y_test = train_test_split(X_mid, y_mid, test_size=0.5)
 
     return X_train, X_dev, X_test, y_train, y_dev, y_test
 
