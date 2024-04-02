@@ -46,18 +46,18 @@ def draw_confusion_matrix(y_test, y_pred, labels):
     return
 
 def display_results(y_true, y_pred, labels, draw=False, average_param="macro"):
-    
+
     if draw:
         draw_confusion_matrix(y_true, y_pred, labels)
-    
+
     print("Accuracy ", accuracy_score(y_true, y_pred))
-    
+
     print("Precision -", average_param)
     print("precision score ", precision_score(y_true, y_pred, average=average_param, zero_division=1))
 
     print("Recall -", average_param)
     print("recall score ",   recall_score(y_true, y_pred, average=average_param, zero_division=1))
-    
+
     print("F1 -", average_param)
     print("f1 score ", f1_score(y_true, y_pred, average=average_param, zero_division=1))
     return
@@ -97,7 +97,7 @@ def train_one_model(vectorizer, model, labels, label_encoder, X_train, y_train, 
     accuracy_dev = accuracy_score(y_dev_labels, y_pred_dev)
     print(f"Accuracy DEV {vectorizer} et {model}: {accuracy_dev:.3f}")
     display_results(y_dev_labels, y_pred_dev, labels, draw)
-    
+
     X_test_scaled = scaler.transform(X_test_vect)
     y_pred_test = model.predict(X_test_scaled)
 
