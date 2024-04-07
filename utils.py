@@ -8,12 +8,18 @@ import numpy as np
 import re
 
 
-def get_data(exclude=None, include=None):
+def get_data(file_path=None, output_file_path=None, columns=None, exclude=None, include=None):
     pattern = r'\(([A-Z]{3})\)'
-
+    if file_path is None:
     # Fichier brut
-    input_file_path = 'data/train.txt'
-    output_file_path = 'data/clean.txt'
+        input_file_path = 'data/train.txt'
+    else:
+        input_file_path = file_path
+    
+    if output_file_path is None:
+        output_file_path = 'data/clean.txt'
+    else:
+        output_file_path = output_file_path
 
     with open(input_file_path, 'r') as input_file, open(output_file_path, 'w') as output_file:
         # Read each line from the input file
@@ -21,7 +27,10 @@ def get_data(exclude=None, include=None):
             modified_line = re.sub(pattern, r'\1\t', line)
             output_file.write(modified_line)
     df = pd.read_csv('data/clean.txt', sep='\t', header=None)
-    df.columns = ['Lang', 'Text']
+    if columns is None:
+        df.columns = ['Lang', 'Text']
+    else :
+        df.columns = columns
     df.to_csv('data/train.csv', index=False)
     if exclude is not None:
         df = df[~df['Lang'].isin(exclude)]
